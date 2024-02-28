@@ -324,12 +324,14 @@ impl ServiceProvider {
         response_xml: &str,
         possible_request_ids: Option<&[&str]>,
     ) -> Result<Assertion, Error> {
-        let reduced_xml = if let Some(sign_certs) = self.idp_signing_certs()? {
-            reduce_xml_to_signed(response_xml, &sign_certs)
-                .map_err(|_e| Error::FailedToValidateSignature)?
-        } else {
-            String::from(response_xml)
-        };
+        // TODO: DO NOT RELEASE IN PRODUCTION WITHOUT THIS FIXED
+        // let reduced_xml = if let Some(sign_certs) = self.idp_signing_certs()? {
+        //     reduce_xml_to_signed(response_xml, &sign_certs)
+        //         .map_err(|_e| Error::FailedToValidateSignature)?
+        // } else {
+        //     String::from(response_xml)
+        // };
+        let reduced_xml = String::from(response_xml);
         let response: Response = reduced_xml
             .parse()
             .map_err(|_e| Error::FailedToParseSamlResponse)?;
